@@ -25,14 +25,14 @@ public class RunState : GroundedState
     {
         base.LogicUpdate();
 
-        player.CheckFlip(input.x);
+            player.CheckFlip(xInput);
 
-        player.SetVelocityX(playerData.movementSpeed * input.x);
+            player.SetVelocityX(playerData.movementSpeed * xInput);
 
-        if(input.x == 0)
-        {
-            stateMachine.ChangeState(player.IdleState);
-        }
+            if (xInput == 0)
+            {
+                stateMachine.ChangeState(player.IdleState);
+            }
     }
 
     public override void PhysicsUpdate()

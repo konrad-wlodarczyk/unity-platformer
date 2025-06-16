@@ -2,7 +2,14 @@ using UnityEngine;
 
 public class GroundedState : PlayerState
 {
+    protected int xInput;
+    protected int yInput;
+
     protected Vector2 input;
+    private bool jumpInput;
+    private bool grabInput;
+    private bool isGrounded;
+    private bool isTouchingWall;
 
     public GroundedState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animationBoolName) : base(player, stateMachine, playerData, animationBoolName)
     {
@@ -11,11 +18,14 @@ public class GroundedState : PlayerState
     public override void DoChecks()
     {
         base.DoChecks();
+        isGrounded = player.CheckGround();
+        isTouchingWall = player.CheckWall();
     }
 
     public override void Enter()
     {
         base.Enter();
+        player.JumpState.ResetJumps();
     }
 
     public override void Exit()
@@ -27,7 +37,27 @@ public class GroundedState : PlayerState
     {
         base.LogicUpdate();
 
+        xInput = player.movementController.NormalizedX;
+        yInput = player.movementController.NormalizedY;
+
         input = player.movementController.movementInput;
+        jumpInput = player.movementController.jumpInput;
+
+        grabInput = player.movementController.grabInput;
+
+        if (jumpInput == true && player.JumpState.CanJump())
+        {
+            stateMachine.ChangeState(player.JumpState);
+        }
+        else if (!isGrounded)
+        {
+            player.AirborneState.StartCoyote();
+            stateMachine.ChangeState(player.AirborneState);
+        }
+        else if (isTouchingWall && grabInput)
+        {
+            stateMachine.ChangeState(player.WallGrabState);
+        }
     }
 
     public override void PhysicsUpdate()
