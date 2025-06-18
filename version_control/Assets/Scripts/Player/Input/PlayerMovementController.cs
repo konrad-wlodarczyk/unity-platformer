@@ -6,7 +6,7 @@ public class PlayerMovementController : MonoBehaviour
     public Vector2 movementInput { get; private set; }
     public bool jumpInput { get; private set; }
     public bool grabInput { get; private set; }
-
+    public bool dashInput { get; private set; }
     public int NormalizedX { get; private set; }
     public int NormalizedY { get; private set; }
 
@@ -14,6 +14,7 @@ public class PlayerMovementController : MonoBehaviour
     private float inputHoldTime = 0.3f;
 
     private float jumpStartTime;
+    private float dashStartTime;
 
     private void Update()
     {
@@ -50,6 +51,19 @@ public class PlayerMovementController : MonoBehaviour
         }
     }
 
+    public void OnDashInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            dashInput = true;
+            dashStartTime = Time.time;
+        }
+        if (context.canceled)
+        {
+            dashInput = false;
+        }
+    }
+
     private void CheckJumpTime()
     {
         if(Time.time >= jumpStartTime + inputHoldTime)
@@ -58,5 +72,14 @@ public class PlayerMovementController : MonoBehaviour
         }
     }
 
+    private void CheckDashTime()
+    {
+        if (Time.time >= dashStartTime + inputHoldTime)
+        {
+            dashInput = false;
+        }
+    }
+
     public void UseJumpInput() => jumpInput = false;
+    public void UseDashInput() => dashInput = false;
 }

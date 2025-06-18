@@ -2,13 +2,19 @@ using UnityEngine;
 
 public class AirborneState : PlayerState
 {
+
+    //Inputs
+    private int xInput;
+    private bool jumpInput;
+    private bool grabInput;
+    private bool dashInput;
+
+    //Checks
+    private bool isTouchingLedge;
+    private bool CoyoteTime;
     private bool isGrounded;
     private bool isTouchingWall;
     private bool isTouchingBackWall;
-    private int xInput;
-    private bool jumpInput;
-    private bool CoyoteTime;
-    private bool grabInput;
 
     public AirborneState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animationBoolName) : base(player, stateMachine, playerData, animationBoolName)
     {
@@ -20,6 +26,12 @@ public class AirborneState : PlayerState
         isGrounded = player.CheckGround();
         isTouchingWall = player.CheckWall();
         isTouchingBackWall = player.CheckBackWall();
+        isTouchingLedge = player.CheckLedge();
+
+        if (isTouchingWall && !isTouchingLedge)
+        {
+            player.LedgeClimbState.SetPosition(player.transform.position);
+        }
     }
 
     public override void Enter()
@@ -41,22 +53,27 @@ public class AirborneState : PlayerState
         xInput = player.movementController.NormalizedX;
         jumpInput = player.movementController.jumpInput;
         grabInput = player.movementController.grabInput;
+        dashInput = player.movementController.dashInput;
 
         if (isGrounded && player.RB.linearVelocity.y < 0.01f)
         {
             stateMachine.ChangeState(player.LandState);
         }
-        else if(jumpInput && (isTouchingWall || isTouchingBackWall))
+        else if(isTouchingWall && !isTouchingLedge && !isGrounded)
+        {
+            stateMachine.ChangeState(player.LedgeClimbState);
+        }
+        else if (jumpInput && (isTouchingWall || isTouchingBackWall))
         {
             player.WallJumpState.DetermineDirection(isTouchingWall);
             stateMachine.ChangeState(player.WallJumpState);
         }
         else if (jumpInput && player.JumpState.CanJump())
         {
-            
+
             stateMachine.ChangeState(player.JumpState);
         }
-        else if (isTouchingWall && grabInput)
+        else if (isTouchingWall && grabInput && isTouchingLedge)
         {
             stateMachine.ChangeState(player.WallGrabState);
         }
@@ -64,6 +81,10 @@ public class AirborneState : PlayerState
         {
             stateMachine.ChangeState(player.WallSlideState);
         }
+        else if(dashInput && player.DashState.CanDash())
+        {
+            stateMachine.ChangeState(player.DashState);
+        }    
         else
         {
             player.CheckFlip(xInput);

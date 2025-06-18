@@ -1,3 +1,4 @@
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -12,6 +13,8 @@ public class Player : MonoBehaviour
     public WallSlideState WallSlideState { get; private set; }
     public WallGrabState WallGrabState { get; private set; }
     public WallJumpState WallJumpState { get; private set; }
+    public LedgeClimbState LedgeClimbState { get; private set; }
+    public DashState DashState { get; private set; }
     public Animator Anim {  get; private set; }
 
     public PlayerMovementController movementController { get; private set; }
@@ -29,6 +32,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private PlayerData playerData;
 
+    [SerializeField]
+    private Transform ledgeCheck;
+
     private Vector2 workspace;
 
     private void Awake()
@@ -43,6 +49,8 @@ public class Player : MonoBehaviour
         WallSlideState = new WallSlideState(this, StateMachine, playerData, "WallSlideAnimation");
         WallGrabState = new WallGrabState(this, StateMachine, playerData, "WallGrabAnimation");
         WallJumpState = new WallJumpState(this, StateMachine, playerData, "InAirAnimation");
+        LedgeClimbState = new LedgeClimbState(this, StateMachine, playerData, "LedgeClimbStateAnimation");
+        DashState = new DashState(this, StateMachine, playerData, "InAirAnimation");
 
     }
 
@@ -86,6 +94,17 @@ public class Player : MonoBehaviour
         RB.linearVelocity = workspace;
     }
 
+    public void SetVelocity(float velocity, Vector2 direction)
+    {
+        workspace = direction * velocity;
+        RB.linearVelocity = workspace;
+    }
+
+    public void SetVelocity0()
+    {
+        RB.linearVelocity = Vector2.zero;
+    }
+
     public bool CheckGround()
     {
         return Physics2D.OverlapCircle(groundCheck.position, playerData.groundCheckRadius, playerData.ground);
@@ -99,6 +118,23 @@ public class Player : MonoBehaviour
     public bool CheckBackWall()
     {
         return Physics2D.Raycast(wallCheck.position, Vector2.right * -facingDirection, playerData.wallCheckDistance, playerData.ground);
+    }
+
+    public bool CheckLedge()
+    {
+        return Physics2D.Raycast(ledgeCheck.position, Vector2.right * facingDirection, playerData.wallCheckDistance, playerData.ground);
+    }
+
+    public Vector2 DetermineCorner()
+    {
+        RaycastHit2D xHit = Physics2D.Raycast(wallCheck.position, Vector2.right * facingDirection, playerData.wallCheckDistance, playerData.ground);
+        float xDistance = xHit.distance;
+        workspace.Set(xDistance * facingDirection, 0);
+        RaycastHit2D yHit = Physics2D.Raycast(ledgeCheck.position + (Vector3)(workspace), Vector2.down, ledgeCheck.position.y - wallCheck.position.y, playerData.ground);
+        float yDistance = yHit.distance;
+
+        workspace.Set(wallCheck.position.x + (xDistance * facingDirection), ledgeCheck.position.y - yDistance);
+        return workspace;
     }
 
     private void AnimationStart() => StateMachine.currentState.AnimationStart();

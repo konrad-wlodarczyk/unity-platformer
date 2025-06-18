@@ -14,12 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 10
   jumpVelocity: 25
-  jumpsAmount: 1
+  jumpsAmount: 2
   CoyoteTime: 0.3
-  wallSlideVelocity: 3
+  wallSlideVelocity: 6
   wallJumpVelocity: 25
   wallJumpTime: 0.4
   wallJumpAngle: {x: 1, y: 2}
+  startOffset: {x: 0.45, y: 1.3}
+  endOffset: {x: 0.7, y: 1.8}
+  dashCooldown: 1
+  dashTime: 0.1
+  dashVelocity: 70
+  drag: 15
+  distanceBetweenImages: 2
+  windupDuration: 0.08
   groundCheckRadius: 0.2
   wallCheckDistance: 1
   ground:

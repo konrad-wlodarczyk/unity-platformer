@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class GroundedState : PlayerState
 {
@@ -10,6 +11,8 @@ public class GroundedState : PlayerState
     private bool grabInput;
     private bool isGrounded;
     private bool isTouchingWall;
+    private bool isTouchingLedge;
+    private bool dashInput;
 
     public GroundedState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animationBoolName) : base(player, stateMachine, playerData, animationBoolName)
     {
@@ -20,12 +23,14 @@ public class GroundedState : PlayerState
         base.DoChecks();
         isGrounded = player.CheckGround();
         isTouchingWall = player.CheckWall();
+        isTouchingLedge = player.CheckLedge();
     }
 
     public override void Enter()
     {
         base.Enter();
         player.JumpState.ResetJumps();
+        player.DashState.ResetDash();
     }
 
     public override void Exit()
@@ -42,6 +47,7 @@ public class GroundedState : PlayerState
 
         input = player.movementController.movementInput;
         jumpInput = player.movementController.jumpInput;
+        dashInput = player.movementController.dashInput;
 
         grabInput = player.movementController.grabInput;
 
@@ -54,7 +60,7 @@ public class GroundedState : PlayerState
             player.AirborneState.StartCoyote();
             stateMachine.ChangeState(player.AirborneState);
         }
-        else if (isTouchingWall && grabInput)
+        else if (isTouchingWall && grabInput && isTouchingLedge)
         {
             stateMachine.ChangeState(player.WallGrabState);
         }
