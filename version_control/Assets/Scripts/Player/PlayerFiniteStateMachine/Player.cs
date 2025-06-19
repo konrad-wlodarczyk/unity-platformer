@@ -15,12 +15,11 @@ public class Player : MonoBehaviour
     public WallJumpState WallJumpState { get; private set; }
     public LedgeClimbState LedgeClimbState { get; private set; }
     public DashState DashState { get; private set; }
+    public AttackState AttackState { get; private set; }
     public Animator Anim {  get; private set; }
-
     public PlayerMovementController movementController { get; private set; }
-
     public Rigidbody2D RB { get; private set; }
-
+    public BoxCollider2D BoxCollider { get; private set; }
     public int facingDirection {  get; private set; }
 
     [SerializeField]
@@ -51,16 +50,18 @@ public class Player : MonoBehaviour
         WallJumpState = new WallJumpState(this, StateMachine, playerData, "InAirAnimation");
         LedgeClimbState = new LedgeClimbState(this, StateMachine, playerData, "LedgeClimbStateAnimation");
         DashState = new DashState(this, StateMachine, playerData, "InAirAnimation");
-
+        AttackState = new AttackState(this, StateMachine, playerData, "AttackAnimation");
     }
 
-    private void Start() 
+    private void Start()
     {
         Anim = GetComponent<Animator>();
         movementController = GetComponent<PlayerMovementController>();
         RB = GetComponent<Rigidbody2D>();
+        BoxCollider = GetComponent<BoxCollider2D>();
 
         facingDirection = 1;
+        
 
         StateMachine.Initialize(IdleState);
     }

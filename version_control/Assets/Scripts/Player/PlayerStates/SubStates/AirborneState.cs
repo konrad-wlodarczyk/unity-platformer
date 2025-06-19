@@ -3,13 +3,11 @@ using UnityEngine;
 public class AirborneState : PlayerState
 {
 
-    //Inputs
     private int xInput;
     private bool jumpInput;
     private bool grabInput;
     private bool dashInput;
-
-    //Checks
+    private bool attackInput;
     private bool isTouchingLedge;
     private bool CoyoteTime;
     private bool isGrounded;
@@ -54,12 +52,13 @@ public class AirborneState : PlayerState
         jumpInput = player.movementController.jumpInput;
         grabInput = player.movementController.grabInput;
         dashInput = player.movementController.dashInput;
+        attackInput = player.movementController.attackInput;
 
         if (isGrounded && player.RB.linearVelocity.y < 0.01f)
         {
             stateMachine.ChangeState(player.LandState);
         }
-        else if(isTouchingWall && !isTouchingLedge && !isGrounded)
+        else if (isTouchingWall && !isTouchingLedge && !isGrounded)
         {
             stateMachine.ChangeState(player.LedgeClimbState);
         }
@@ -81,10 +80,14 @@ public class AirborneState : PlayerState
         {
             stateMachine.ChangeState(player.WallSlideState);
         }
-        else if(dashInput && player.DashState.CanDash())
+        else if (dashInput && player.DashState.CanDash())
         {
             stateMachine.ChangeState(player.DashState);
-        }    
+        }
+        else if (attackInput)
+        {
+            player.StateMachine.ChangeState(player.AttackState);
+        }
         else
         {
             player.CheckFlip(xInput);

@@ -3,7 +3,6 @@ using UnityEngine.EventSystems;
 
 public class RunState : GroundedState
 {
-    private bool dashInput;
 
     public RunState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animationBoolName) : base(player, stateMachine, playerData, animationBoolName)
     {
@@ -28,8 +27,6 @@ public class RunState : GroundedState
     {
         base.LogicUpdate();
 
-        dashInput = player.movementController.dashInput;
-
         player.CheckFlip(xInput);
 
             player.SetVelocityX(playerData.movementSpeed * xInput);
@@ -37,10 +34,6 @@ public class RunState : GroundedState
             if (xInput == 0)
             {
                 stateMachine.ChangeState(player.IdleState);
-            }
-            else if (dashInput && player.DashState.CanDash())
-            {
-                stateMachine.ChangeState(player.DashState);
             }
     }
 

@@ -7,6 +7,7 @@ public class PlayerMovementController : MonoBehaviour
     public bool jumpInput { get; private set; }
     public bool grabInput { get; private set; }
     public bool dashInput { get; private set; }
+    public bool attackInput { get; private set; }
     public int NormalizedX { get; private set; }
     public int NormalizedY { get; private set; }
 
@@ -61,6 +62,18 @@ public class PlayerMovementController : MonoBehaviour
         if (context.canceled)
         {
             dashInput = false;
+        }
+    }
+
+    public void OnAttackInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            attackInput = true;
+        }
+        if (context.canceled)
+        {
+            attackInput = false;
         }
     }
 

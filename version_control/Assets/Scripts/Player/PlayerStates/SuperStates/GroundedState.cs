@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -13,6 +14,7 @@ public class GroundedState : PlayerState
     private bool isTouchingWall;
     private bool isTouchingLedge;
     private bool dashInput;
+    private bool attackInput;
 
     public GroundedState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animationBoolName) : base(player, stateMachine, playerData, animationBoolName)
     {
@@ -50,6 +52,7 @@ public class GroundedState : PlayerState
         dashInput = player.movementController.dashInput;
 
         grabInput = player.movementController.grabInput;
+        attackInput = player.movementController.attackInput;
 
         if (jumpInput == true && player.JumpState.CanJump())
         {
@@ -63,6 +66,14 @@ public class GroundedState : PlayerState
         else if (isTouchingWall && grabInput && isTouchingLedge)
         {
             stateMachine.ChangeState(player.WallGrabState);
+        }
+        else if (dashInput && player.DashState.CanDash())
+        {
+            stateMachine.ChangeState(player.DashState);
+        }
+        else if (attackInput)
+        {
+            player.StateMachine.ChangeState(player.AttackState);
         }
     }
 
