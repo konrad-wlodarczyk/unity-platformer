@@ -32,7 +32,7 @@ public class Enemy1 : Entity, IDamageable
         currentHealth = enemyData.maxHealth;
     }
 
-    public void Damage(float amount)
+    public void Damage(int amount)
     {
         currentHealth -= amount;
 

@@ -1,3 +1,4 @@
+using UnityEditor.Playables;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "newPlayerData", menuName = "Data/Player Data/Base Data")]
@@ -18,7 +19,7 @@ public class PlayerData : ScriptableObject
     public float movementSpeed = 5.0f;
 
     [Header("Jump State")]
-    public float jumpVelocity = 15f;
+    public float jumpVelocity = 20f;
     public int jumpsAmount = 1;
 
     [Header("Airborne State")]
@@ -55,7 +56,7 @@ public class PlayerData : ScriptableObject
         experience += amount;
     }
 
-    public void AddHealth(int amount)
+    public void AddHealth()
     {
         int cost = GetUpgradeCost("health");
         if (experience >= cost)
@@ -64,16 +65,35 @@ public class PlayerData : ScriptableObject
             maxHealth += 10;  
             healthUpgradeCount++;
         }
+
     }
 
-    public void AddStrength(int amount)
+    public void AddStrength()
     {
-        maxStrenght += amount;
+        int cost = GetUpgradeCost("strength");
+        if (experience >= cost)
+        {
+            experience -= cost;
+            maxStrenght += 3;
+            strengthUpgradeCount++;
+        }
     }
 
-    public void AddAgility(int amount)
+    public void AddAgility()
     {
-        maxAgility += amount;
+        int cost = GetUpgradeCost("agility");
+        if (experience >= cost)
+        {
+            experience -= cost;
+            maxAgility += 1;
+            agilityUpgradeCount++;
+        }
+
+        if (maxAgility == 2)
+        {
+            jumpVelocity = 21;
+            jumpsAmount = 2;
+        }
     }
 
     public int GetUpgradeCost(string stat)

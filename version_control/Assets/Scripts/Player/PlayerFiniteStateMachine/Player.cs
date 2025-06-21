@@ -24,7 +24,7 @@ public class Player : MonoBehaviour, IDamageable
     public Rigidbody2D RB { get; private set; }
     public BoxCollider2D BoxCollider { get; private set; }
     public int facingDirection {  get; private set; }
-    public float currentHealth { get; private set; }
+    public int currentHealth { get; set; }
 
     [SerializeField]
     private Transform groundCheck;
@@ -74,6 +74,14 @@ public class Player : MonoBehaviour, IDamageable
         StateMachine.Initialize(IdleState);
 
         playerData.experience = 0;
+        playerData.maxHealth = 100;
+        playerData.maxStrenght = 10;
+        playerData.maxAgility = 1;
+        playerData.healthUpgradeCount = 0;
+        playerData.strengthUpgradeCount = 0;
+        playerData.agilityUpgradeCount = 0;
+        playerData.jumpVelocity = 25f;
+        playerData.jumpsAmount = 1;
 
         ExperienceManager.Instance.ExperienceChange += HandleExperienceGain;
     }
@@ -81,6 +89,8 @@ public class Player : MonoBehaviour, IDamageable
     private void Update()
     {
         StateMachine.currentState.LogicUpdate();
+
+
     }
 
     private void FixedUpdate()
@@ -167,10 +177,10 @@ public class Player : MonoBehaviour, IDamageable
         transform.Rotate(0.0f, 180.0f, 0.0f); 
     }
 
-    public void Damage(float amount)
+    public void Damage(int amount)
     {
         currentHealth -= amount;
-        healthbar.SetHealth(currentHealth, playerData.maxHealth);
+        HealthBar.Instance.SetHealth(currentHealth, playerData.maxHealth);
 
         if (currentHealth <= 0 )
         {

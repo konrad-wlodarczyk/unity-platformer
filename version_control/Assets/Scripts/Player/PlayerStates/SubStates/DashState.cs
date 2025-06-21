@@ -79,7 +79,7 @@ public class DashState : AbilityState
 
     public bool CanDash()
     {
-        return canDash && Time.time >= lastDashTime + playerData.dashCooldown;
+        return canDash && Time.time >= lastDashTime + playerData.dashCooldown && playerData.maxAgility >= 3;
     }
 
     public void ResetDash() => canDash = true;

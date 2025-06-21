@@ -94,7 +94,7 @@ public class AttackState : AbilityState
 
         foreach (IDamageable item in targets)
         {
-            item.Damage(10f);
+            item.Damage(playerData.maxStrenght);
         }
     }
 

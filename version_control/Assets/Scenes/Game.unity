@@ -1016,6 +1016,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cf4b77c925c589468ae328286564a56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
 --- !u!212 &398861415
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3678,6 +3679,7 @@ MonoBehaviour:
   Strength: {fileID: 2035980041}
   Agility: {fileID: 1953012459}
   playerData: {fileID: 11400000, guid: 2e1932eba7a457549801608d33eab51a, type: 2}
+  player: {fileID: 954449594}
 --- !u!1 &1381399469
 GameObject:
   m_ObjectHideFlags: 0

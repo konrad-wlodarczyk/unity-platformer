@@ -86,7 +86,7 @@ public class MeleeAttackState : EnemyAttackState
 
         foreach (IDamageable item in targets)
         {
-            item.Damage(5f);
+            item.Damage(20);
         }
     }
 

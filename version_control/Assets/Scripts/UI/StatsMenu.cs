@@ -23,6 +23,8 @@ public class StatsMenu : MonoBehaviour
     [SerializeField]
     private PlayerData playerData;
 
+    public Player player;
+
     private void Awake()
     {
         if (Instance == null)
@@ -46,6 +48,7 @@ public class StatsMenu : MonoBehaviour
 
     public void OpenMenu()
     {
+
         menuPanel.SetActive(true);
         Time.timeScale = 0f;
         isMenuOpen = true;
@@ -53,6 +56,8 @@ public class StatsMenu : MonoBehaviour
 
     public void CloseMenu()
     {
+        player.currentHealth = playerData.maxHealth;
+        HealthBar.Instance.SetHealth(player.currentHealth, playerData.maxHealth);
         menuPanel.SetActive(false);
         Time.timeScale = 1f;
         isMenuOpen = false;
@@ -60,19 +65,20 @@ public class StatsMenu : MonoBehaviour
 
     public void UpgradeHealth()
     {
-        playerData.AddHealth(10);  
+        playerData.AddHealth();  
         Update();
+        HealthBar.Instance.SetHealth(player.currentHealth, playerData.maxHealth);
     }
 
     public void UpgradeStrength()
     {
-        playerData.AddStrength(1);
+        playerData.AddStrength();
         Update();
     }
 
     public void UpgradeAgility()
     {
-        playerData.AddAgility(1);
+        playerData.AddAgility();
         Update();
     }
 }

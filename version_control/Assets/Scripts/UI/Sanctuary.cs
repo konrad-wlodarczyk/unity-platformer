@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Sanctuary : MonoBehaviour
 {
+    public Player player;
+
     private bool playerInRange;
 
     private void OnTriggerEnter2D(Collider2D collision)

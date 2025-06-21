@@ -6,8 +6,9 @@ public class CombatDummy : MonoBehaviour, IDamageable
 
     public float currentHealth = 100f;
 
-    public void Damage(float amount)
+    public void Damage(int amount)
     {
+        Debug.Log("Hit for: " + amount);
         anim.SetTrigger("Damage");
         currentHealth -= amount;
 

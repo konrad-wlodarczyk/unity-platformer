@@ -3,9 +3,11 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    [SerializeField] 
+    public static HealthBar Instance;
+
+    [SerializeField]
     private Slider slider;
-    [SerializeField] 
+    [SerializeField]
     private Image borderImage;
 
     [SerializeField] private Sprite fullHealthBorder;
@@ -14,16 +16,24 @@ public class HealthBar : MonoBehaviour
     [SerializeField] private Sprite twentyFiveBorder;
     [SerializeField] private Sprite emptyBorder;
 
-    public void SetHealth(float current, float max)
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+    }
+
+    public void SetHealth(int current, int max)
     {
         slider.maxValue = max;
         slider.value = current;
         UpdateBorder(current, max);
     }
 
-    private void UpdateBorder(float current, float max)
+    private void UpdateBorder(int current, int max)
     {
-        float percentage = current / max;
+        float percentage = (float)current / max;
 
         if (percentage >= 0.75f)
             borderImage.sprite = fullHealthBorder;
