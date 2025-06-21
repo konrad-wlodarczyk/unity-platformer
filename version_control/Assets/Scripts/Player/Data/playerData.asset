@@ -32,4 +32,4 @@ MonoBehaviour:
   wallCheckDistance: 1
   ground:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 8

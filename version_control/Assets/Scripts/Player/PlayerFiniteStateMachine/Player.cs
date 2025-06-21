@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public GameObject AttackHitbox;
     public PlayerStateMachine StateMachine { get; private set; }
 
     public IdleState IdleState {  get; private set; }

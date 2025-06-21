@@ -9,6 +9,8 @@ public class AttackState : AbilityState
     private bool shouldCheckFlip;
     protected int attackCounter;
 
+    private List<IDamageable> targets = new List<IDamageable>();
+
     public AttackState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }
@@ -23,6 +25,7 @@ public class AttackState : AbilityState
         }
 
         player.Anim.SetInteger("AttackCounter", attackCounter);
+        player.AttackHitbox.GetComponent<AttackHitbox>().Initialize(this);
 
     }
 
@@ -50,12 +53,49 @@ public class AttackState : AbilityState
         shouldCheckFlip = value;
     }
 
+    public void AddTarget(Collider2D collider)
+    {
+        IDamageable damageable = collider.GetComponent<IDamageable>();
+
+        if (damageable != null)
+        {
+            Debug.Log("Added target: " + damageable);
+            targets.Add(damageable);
+        }
+    }
+
+    public void RemoveTarget(Collider2D collider)
+    {
+        IDamageable damageable = collider.GetComponent<IDamageable>();
+
+        if (damageable != null)
+        {
+            Debug.Log("removed target: " + damageable);
+            targets.Remove(damageable);
+        }
+    }
 
     public override void AnimationFinish()
     {
         base.AnimationFinish();
-        Debug.Log("Animation Finished");
 
         isAbilityDone = true;
     }
+
+    public override void AnimationStart()
+    {
+        base.AnimationStart();
+        CheckAttack();
+    }   
+
+    private void CheckAttack()
+    {
+        Debug.Log("Checking attack. Target count: " + targets.Count);
+
+        foreach (IDamageable item in targets)
+        {
+            item.Damage(10f);
+        }
+    }
+
 }
