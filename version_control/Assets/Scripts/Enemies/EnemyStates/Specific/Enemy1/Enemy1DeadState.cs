@@ -11,7 +11,6 @@ public class Enemy1DeadState : EnemyDeathState
     public override void Enter()
     {
         base.Enter();
-
         enemy.SetVelocity(0.0f);
     }
 }

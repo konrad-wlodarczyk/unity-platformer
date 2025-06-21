@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class PlayerData : ScriptableObject
 {
+    public int healthUpgradeCount = 0;
+    public int strengthUpgradeCount = 0;
+    public int agilityUpgradeCount = 0;
+
     [Header("Player Statistics")]
-    public float maxHealth = 100.0f;
-    public float maxStamina = 50.0f;
-    public float agility = 1f;
+    public int maxHealth = 100;
+    public int maxStrenght = 10;
+    public float maxAgility = 1;
+    public int experience = 0;
 
     [Header("Running State")]
     public float movementSpeed = 5.0f;
@@ -43,4 +48,51 @@ public class PlayerData : ScriptableObject
     public float groundCheckRadius = 0.3f;
     public float wallCheckDistance = 0.5f;
     public LayerMask ground;
+
+
+    public void AddExperience(int amount)
+    {
+        experience += amount;
+    }
+
+    public void AddHealth(int amount)
+    {
+        int cost = GetUpgradeCost("health");
+        if (experience >= cost)
+        {
+            experience -= cost;
+            maxHealth += 10;  
+            healthUpgradeCount++;
+        }
+    }
+
+    public void AddStrength(int amount)
+    {
+        maxStrenght += amount;
+    }
+
+    public void AddAgility(int amount)
+    {
+        maxAgility += amount;
+    }
+
+    public int GetUpgradeCost(string stat)
+    {
+        int count = 0;
+
+        switch (stat)
+        {
+            case "health":
+                count = healthUpgradeCount;
+                break;
+            case "strength":
+                count = strengthUpgradeCount;
+                break;
+            case "agility":
+                count = agilityUpgradeCount;
+                break;
+        }
+
+        return 10 * (count + 1);  
+    }
 }

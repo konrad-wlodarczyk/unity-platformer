@@ -14,6 +14,8 @@ public class Enemy1 : Entity, IDamageable
 
     protected float currentHealth;
 
+    public int experienceAmount = 100;
+
     public override void Start()
     {
         base.Start();
@@ -36,6 +38,7 @@ public class Enemy1 : Entity, IDamageable
 
         if (currentHealth <= 0)
         {
+            ExperienceManager.Instance.AddExperience(experienceAmount);
             stateMachine.ChangeState(DeadState);
         }
     }

@@ -13,6 +13,7 @@ public class CombatDummy : MonoBehaviour, IDamageable
 
         if(currentHealth <= 0)
         {
+            ExperienceManager.Instance.AddExperience(100);
             anim.SetTrigger("Death");
         }
     }

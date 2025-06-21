@@ -71,8 +71,11 @@ public class Player : MonoBehaviour, IDamageable
         facingDirection = 1;
         currentHealth = playerData.maxHealth;
         
-
         StateMachine.Initialize(IdleState);
+
+        playerData.experience = 0;
+
+        ExperienceManager.Instance.ExperienceChange += HandleExperienceGain;
     }
 
     private void Update()
@@ -173,5 +176,15 @@ public class Player : MonoBehaviour, IDamageable
         {
             StateMachine.ChangeState(DeadState);
         }
+    }
+
+    private void OnDestroy()
+    {
+        ExperienceManager.Instance.ExperienceChange -= HandleExperienceGain;
+    }
+
+    private void HandleExperienceGain(int amount)
+    {
+        playerData.AddExperience(amount);
     }
 }
