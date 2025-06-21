@@ -9,8 +9,6 @@ public class Entity : MonoBehaviour
     public Animator anim { get; private set;}
     public GameObject alive {  get; private set;}
 
-    public AnimationToState ats { get; private set;}
-
     private Vector2 workspace;
 
     public int facingDirection { get; private set;}
@@ -29,7 +27,6 @@ public class Entity : MonoBehaviour
         RB = alive.GetComponent<Rigidbody2D>();
         anim = alive.GetComponent<Animator>();
         stateMachine = new EnemyStateMachine();
-        ats = alive.GetComponent<AnimationToState>();
     }
 
     public virtual void Update()
@@ -71,6 +68,9 @@ public class Entity : MonoBehaviour
     {
         return Physics2D.Raycast(playerCheck.position, alive.transform.right, enemyData.meleeDistance, enemyData.player);
     }
+
+    public void AnimationStart() => stateMachine.currentState.AnimationStart();
+    public void AnimationFinish() => stateMachine.currentState.AnimationFinish();
 
     public void Flip()
     {

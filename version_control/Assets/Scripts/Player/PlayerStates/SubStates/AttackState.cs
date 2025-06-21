@@ -55,22 +55,22 @@ public class AttackState : AbilityState
 
     public void AddTarget(Collider2D collider)
     {
-        IDamageable damageable = collider.GetComponent<IDamageable>();
+        IDamageable damageable = collider.GetComponentInParent<IDamageable>();
 
         if (damageable != null)
         {
-            Debug.Log("Added target: " + damageable);
+            //Debug.Log("Added target: " + damageable);
             targets.Add(damageable);
         }
     }
 
     public void RemoveTarget(Collider2D collider)
     {
-        IDamageable damageable = collider.GetComponent<IDamageable>();
+        IDamageable damageable = collider.GetComponentInParent<IDamageable>();
 
         if (damageable != null)
         {
-            Debug.Log("removed target: " + damageable);
+            //Debug.Log("removed target: " + damageable);
             targets.Remove(damageable);
         }
     }
@@ -90,7 +90,7 @@ public class AttackState : AbilityState
 
     private void CheckAttack()
     {
-        Debug.Log("Checking attack. Target count: " + targets.Count);
+        //Debug.Log("Checking attack. Target count: " + targets.Count);
 
         foreach (IDamageable item in targets)
         {

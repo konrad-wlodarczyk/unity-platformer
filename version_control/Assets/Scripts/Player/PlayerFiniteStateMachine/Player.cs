@@ -1,7 +1,8 @@
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
     public GameObject AttackHitbox;
     public PlayerStateMachine StateMachine { get; private set; }
@@ -17,11 +18,13 @@ public class Player : MonoBehaviour
     public LedgeClimbState LedgeClimbState { get; private set; }
     public DashState DashState { get; private set; }
     public AttackState AttackState { get; private set; }
+    public DeadState DeadState { get; private set; }
     public Animator Anim {  get; private set; }
     public PlayerMovementController movementController { get; private set; }
     public Rigidbody2D RB { get; private set; }
     public BoxCollider2D BoxCollider { get; private set; }
     public int facingDirection {  get; private set; }
+    public float currentHealth { get; private set; }
 
     [SerializeField]
     private Transform groundCheck;
@@ -34,6 +37,9 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private Transform ledgeCheck;
+
+    [SerializeField]
+    private HealthBar healthbar;
 
     private Vector2 workspace;
 
@@ -52,6 +58,7 @@ public class Player : MonoBehaviour
         LedgeClimbState = new LedgeClimbState(this, StateMachine, playerData, "LedgeClimbStateAnimation");
         DashState = new DashState(this, StateMachine, playerData, "InAirAnimation");
         AttackState = new AttackState(this, StateMachine, playerData, "AttackAnimation");
+        DeadState = new DeadState(this, StateMachine, playerData, "DeathAnimation");
     }
 
     private void Start()
@@ -62,6 +69,7 @@ public class Player : MonoBehaviour
         BoxCollider = GetComponent<BoxCollider2D>();
 
         facingDirection = 1;
+        currentHealth = playerData.maxHealth;
         
 
         StateMachine.Initialize(IdleState);
@@ -154,5 +162,16 @@ public class Player : MonoBehaviour
     {
         facingDirection *= -1;
         transform.Rotate(0.0f, 180.0f, 0.0f); 
+    }
+
+    public void Damage(float amount)
+    {
+        currentHealth -= amount;
+        healthbar.SetHealth(currentHealth, playerData.maxHealth);
+
+        if (currentHealth <= 0 )
+        {
+            StateMachine.ChangeState(DeadState);
+        }
     }
 }

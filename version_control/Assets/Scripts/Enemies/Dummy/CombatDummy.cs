@@ -4,10 +4,17 @@ public class CombatDummy : MonoBehaviour, IDamageable
 {
     private Animator anim;
 
+    public float currentHealth = 100f;
+
     public void Damage(float amount)
     {
-        Debug.Log("Ale mu wyjebales");
         anim.SetTrigger("Damage");
+        currentHealth -= amount;
+
+        if(currentHealth <= 0)
+        {
+            anim.SetTrigger("Death");
+        }
     }
 
     private void Awake()

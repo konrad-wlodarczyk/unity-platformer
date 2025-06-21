@@ -1,12 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyAttackState : EnemyState
 {
-    protected Transform attackHitbox;
-
-    public EnemyAttackState(EnemyStateMachine stateMachine, Entity entity, EnemyData enemyData, string animationBoolName, Transform attackHitbox) : base(stateMachine, entity, enemyData, animationBoolName)
+    public EnemyAttackState(EnemyStateMachine stateMachine, Entity entity, EnemyData enemyData, string animationBoolName) : base(stateMachine, entity, enemyData, animationBoolName)
     {
-        this.attackHitbox = attackHitbox;
     }
 
     public override void DoChecks()
@@ -19,8 +17,6 @@ public class EnemyAttackState : EnemyState
         base.Enter();
         isFinished = false;
         entity.SetVelocity(0.0f);
-
-        entity.ats.attackState = this;
     }
 
     public override void Exit()
@@ -38,10 +34,13 @@ public class EnemyAttackState : EnemyState
         base.PhysicsUpdate();
     }
 
-    public virtual void AnimationStart() { }
-
-    public virtual void AnimationFinish() 
+    public override void AnimationStart()
     {
-        isFinished = true;
+        base.AnimationStart();
+    }
+
+    public override void AnimationFinish()
+    {
+        base.AnimationFinish();
     }
 }

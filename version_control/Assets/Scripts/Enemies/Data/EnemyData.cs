@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EnemyData : ScriptableObject
 {
+    [Header("Enemy-1 Statistics")]
+    public float maxHealth = 50.0f;
+
     [Header("Idle State")]
     public float idleTime = 2f;
 

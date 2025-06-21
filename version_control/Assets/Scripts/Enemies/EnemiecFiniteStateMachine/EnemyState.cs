@@ -44,4 +44,7 @@ public class EnemyState
     {
 
     }
+
+    public virtual void AnimationStart() { }
+    public virtual void AnimationFinish() => isFinished = true;
 }

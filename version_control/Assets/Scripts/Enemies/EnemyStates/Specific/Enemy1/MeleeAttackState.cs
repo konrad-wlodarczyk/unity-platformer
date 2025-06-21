@@ -1,44 +1,20 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MeleeAttackState : EnemyAttackState
 {
     private Enemy1 enemy;
     protected bool isInMinRange;
-    public MeleeAttackState(EnemyStateMachine stateMachine, Entity entity, EnemyData enemyData, string animationBoolName, Transform attackHitbox, Enemy1 enemy) : base(stateMachine, entity, enemyData, animationBoolName, attackHitbox)
+    protected List<IDamageable> targets = new List<IDamageable>();
+    public MeleeAttackState(EnemyStateMachine stateMachine, Entity entity, EnemyData enemyData, string animationBoolName, Enemy1 enemy) : base(stateMachine, entity, enemyData, animationBoolName)
     {
         this.enemy = enemy;
-    }
-
-    public override void AnimationFinish()
-    {
-        base.AnimationFinish();
-    }
-
-    public override void AnimationStart()
-    {
-        base.AnimationStart();
-
-        Collider2D[] targets = Physics2D.OverlapCircleAll(attackHitbox.position, enemyData.meleeDistance, enemyData.player);
-
-        foreach (Collider2D target in targets)
-        {
-            IDamageable damageable = target.GetComponent<IDamageable>();
-            if (damageable != null)
-            {
-                damageable.Damage(enemyData.attackDamage);
-            }
-        }
-    }
-
-    public override void DoChecks()
-    {
-        base.DoChecks();
-        isInMinRange = entity.CheckPlayerMin();
     }
 
     public override void Enter()
     {
         base.Enter();
+        enemy.AttackHitbox.GetComponent<EnemyAttackHitbox>().Initialize(this);
 
     }
 
@@ -69,5 +45,54 @@ public class MeleeAttackState : EnemyAttackState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+    }
+
+    public void AddTarget(Collider2D collider)
+    {
+        IDamageable damageable = collider.GetComponentInParent<IDamageable>();
+
+        if (damageable != null)
+        {
+            //Debug.Log("Added target: " + damageable);
+            targets.Add(damageable);
+        }
+    }
+
+    public void RemoveTarget(Collider2D collider)
+    {
+        IDamageable damageable = collider.GetComponentInParent<IDamageable>();
+
+        if (damageable != null)
+        {
+            //Debug.Log("removed target: " + damageable);
+            targets.Remove(damageable);
+        }
+    }
+
+    public override void AnimationFinish()
+    {
+        base.AnimationFinish();
+    }
+
+    public override void AnimationStart()
+    {
+        base.AnimationStart();
+        CheckAttack();
+    }
+
+    private void CheckAttack()
+    {
+        //Debug.Log("Checking attack. Target count: " + targets.Count);
+
+        foreach (IDamageable item in targets)
+        {
+            item.Damage(5f);
+        }
+    }
+
+    public override void DoChecks()
+    {
+        base.DoChecks();
+        isInMinRange = entity.CheckPlayerMin();
     }
 }
